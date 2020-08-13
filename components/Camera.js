@@ -2,16 +2,19 @@ import React from 'react';
 import { Dimensions, Alert, StyleSheet, ActivityIndicator } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import CaptureButton from "./CaptureButton"
+import axios from 'axios' 
 
 export default class Camera extends React.Component {
     constructor(props){
         super(props);
         this.state = { 
             identifedAs: '',
-            loading: false
+            loading: false,
+            selectedFile: null
         }
     }
 
+    //use for API CLARIFAI
     takePicture = async function(){
         if (this.camera) {
             // Pause the camera's preview
@@ -44,6 +47,71 @@ export default class Camera extends React.Component {
         );
     }
 
+    //USED FOR API CALL 
+    takePicture_v2 = async () => {
+        const options = { quality: 0.5, base64: false, width: 224 };
+        const data = await this.camera.takePictureAsync(options);
+        this.setState({selectedFile: data});
+        PicturePath = data.uri;
+        console.log(PicturePath);
+        this.storePicture(PicturePath);
+    }
+
+    storePicture(PicturePath) {
+        console.log(PicturePath);
+        if (PicturePath) {
+        
+          // Create the form data object
+          var data = new FormData();
+          data.append('image', {
+            uri: PicturePath,
+            name: 'image.jpeg',
+            type: 'image/jpeg'
+          });
+
+          const newData = new FormData();
+          newData.append('image', this.state.selectedFile, this.state.selectedFile.name);
+          axios.post("http://185.92.221.52:5001/predict", newData, {
+              onUploadProgress: progressEvent => {
+                  console.log("Upload progress: "+ Math.round(progressEvent.loaded/ progressEvent.total*100) );
+              }
+          }).then(responseData => {
+            // Log the response form the server
+            // Here we get what we sent to Postman back
+            console.log(responseData);
+           },(err)=>{
+                console.log(err)
+            });
+
+      
+          // Create the config object for the POST
+          // You typically have an OAuth2 token that you use for authentication
+          const config = {
+            method: 'post',
+            headers: {'Content-Type': ''},
+            body: data
+          };
+      
+        //   fetch('http://185.92.221.52:5001/predict', config).then(responseData => {
+        //     // Log the response form the server
+        //     // Here we get what we sent to Postman back
+        //     console.log(responseData); 
+        //   }).catch(err => { console.log(err); });
+
+        //   axios({
+        //       url: "http://185.92.221.52:5001/predict",
+        //       method: "POST",
+        //       headers:{"Accept": null},
+        //       data: data
+        //   }).then((res)=>{
+        //     console.log(res); 
+        //   },(err)=>{
+        //     console.log(err)
+        //   });
+        }
+    }
+
+
     displayAnswer(identifiedImage){
         // Dismiss the acitivty indicator
         this.setState((prevState, props) => ({
@@ -65,7 +133,8 @@ export default class Camera extends React.Component {
         return(
         <RNCamera ref={ref => {this.camera = ref;}} style={styles.preview}>
         <ActivityIndicator size="large" style={styles.loadingIndicator} color="#fff" animating={this.state.loading}/>
-        <CaptureButton buttonDisabled={this.state.loading} onClick={this.takePicture.bind(this)}/>
+        {/* <CaptureButton buttonDisabled={this.state.loading} onClick={this.takePicture.bind(this)}/> */}
+        <CaptureButton buttonDisabled={this.state.loading} onClick={this.takePicture_v2.bind(this)}/>
         </RNCamera>
         );
     }
