@@ -49,16 +49,23 @@ export default class Camera extends React.Component {
 
     //USED FOR API CALL 
     takePicture_v2 = async () => {
-        const options = { quality: 0.5, base64: false, width: 224 };
-        const data = await this.camera.takePictureAsync(options);
-        this.setState({selectedFile: data});
-        PicturePath = data.uri;
-        console.log(PicturePath);
-        this.storePicture(PicturePath);
+        if(this.camera){
+            this.camera.pausePreview();
+            // Set the activity indicator
+            this.setState((previousState, props) => ({
+                loading: true
+            }));
+            const options = { quality: 0.5, base64: false, width: 224 };
+            const data = await this.camera.takePictureAsync(options);
+            this.setState({selectedFile: data});
+            PicturePath = data.uri;
+            // console.log(PicturePath);
+            this.storePicture(PicturePath);
+        }
     }
 
     storePicture(PicturePath) {
-        console.log(PicturePath);
+        // console.log(PicturePath);
         if (PicturePath) {
         
           // Create the form data object
@@ -78,7 +85,12 @@ export default class Camera extends React.Component {
           }).then(responseData => {
             // Log the response form the server
             // Here we get what we sent to Postman back
-            console.log(responseData);
+            temp = JSON.parse(JSON.stringify(responseData));
+            console.log(temp.data);
+            if(temp.data.number_plate){
+                let np = temp.data.number_plate;
+                this.displayAnswer(np);
+            }
            },(err)=>{
                 console.log(err)
             });
@@ -88,11 +100,11 @@ export default class Camera extends React.Component {
           // You typically have an OAuth2 token that you use for authentication
           const config = {
             method: 'post',
-            headers: {'Content-Type': ''},
+            headers: {'Content-Type': 'multipart/form-data'},
             body: data
           };
       
-        //   fetch('http://185.92.221.52:5001/predict', config).then(responseData => {
+        //   fetch('http://192.168.0.110:5000', config).then(responseData => {
         //     // Log the response form the server
         //     // Here we get what we sent to Postman back
         //     console.log(responseData); 
@@ -114,19 +126,18 @@ export default class Camera extends React.Component {
 
     displayAnswer(identifiedImage){
         // Dismiss the acitivty indicator
-        this.setState((prevState, props) => ({
+        this.setState({
             identifedAs:identifiedImage,
             loading:false
-        }));
-
-    // Show an alert with the answer on
-    Alert.alert(
-            this.state.identifedAs,
-            '',
-            { cancelable: false }
-        )
-        // Resume the preview
-        this.camera.resumePreview();
+        });
+        // Show an alert with the answer on
+        Alert.alert(
+                this.state.identifedAs,
+                '',
+                { cancelable: false }
+            )
+            // Resume the preview
+            this.camera.resumePreview();
     }
 
     render(){

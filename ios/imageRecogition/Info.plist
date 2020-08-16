@@ -4,6 +4,10 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+  <key>NSCameraUsageDescription</key>
+  <string>Your own description of the purpose</string>
+  <key>NSMicrophoneUsageDescription</key>
+  <string>Your own description of the purpose</string>
 	<key>CFBundleDisplayName</key>
 	<string>imageRecogition</string>
 	<key>CFBundleExecutable</key>
