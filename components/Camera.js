@@ -68,30 +68,32 @@ export default class Camera extends React.Component {
         // console.log(PicturePath);
         if (PicturePath) {
         
-          // Create the form data object
-          var data = new FormData();
-          data.append('image', {
-            uri: PicturePath,
-            name: 'image.jpeg',
-            type: 'image/jpeg'
-          });
+            // Create the form data object
+            var data = new FormData();
+            data.append('image', {
+                uri: PicturePath,
+                name: 'image.jpeg',
+                type: 'image/jpeg'
+            });
 
-          const newData = new FormData();
-          newData.append('image', this.state.selectedFile, this.state.selectedFile.name);
-          axios.post("http://185.92.221.52:5001/predict", newData, {
-              onUploadProgress: progressEvent => {
-                  console.log("Upload progress: "+ Math.round(progressEvent.loaded/ progressEvent.total*100) );
-              }
-          }).then(responseData => {
-            // Log the response form the server
-            // Here we get what we sent to Postman back
-            temp = JSON.parse(JSON.stringify(responseData));
-            console.log(temp.data);
-            if(temp.data.number_plate){
-                let np = temp.data.number_plate;
-                this.displayAnswer(np);
-            }
-           },(err)=>{
+            const newData = new FormData();
+            newData.append('image', this.state.selectedFile, this.state.selectedFile.name);
+            axios.post("https://car-plate-detection.herokuapp.com/predict", newData, {
+                onUploadProgress: progressEvent => {
+                    console.log("Upload progress: "+ Math.round(progressEvent.loaded/ progressEvent.total*100) );
+                }
+            }).then(responseData => {
+                // Log the response form the server
+                // Here we get what we sent to Postman back
+                temp = JSON.parse(JSON.stringify(responseData));
+                console.log(temp.data);
+                // if(temp.data.number_plate){
+                //     let np = temp.data.number_plate;
+                //     this.displayAnswer(np);
+                // }
+                this.displayAnswer(JSON.stringify(temp.data));
+
+            },(err)=>{
                 console.log(err)
             });
 
@@ -103,23 +105,6 @@ export default class Camera extends React.Component {
             headers: {'Content-Type': 'multipart/form-data'},
             body: data
           };
-      
-        //   fetch('http://192.168.0.110:5000', config).then(responseData => {
-        //     // Log the response form the server
-        //     // Here we get what we sent to Postman back
-        //     console.log(responseData); 
-        //   }).catch(err => { console.log(err); });
-
-        //   axios({
-        //       url: "http://185.92.221.52:5001/predict",
-        //       method: "POST",
-        //       headers:{"Accept": null},
-        //       data: data
-        //   }).then((res)=>{
-        //     console.log(res); 
-        //   },(err)=>{
-        //     console.log(err)
-        //   });
         }
     }
 
