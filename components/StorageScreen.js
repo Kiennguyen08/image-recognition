@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Button, Image } from 'react-native';
+import { Dimensions, StyleSheet, Text, View, TouchableOpacity, Button, Image, Alert } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
 import axios from 'axios' 
 
@@ -9,6 +9,7 @@ export default class StorageScreen extends React.Component {
         super(props);
         this.state = {
         resourcePath: {},
+        identifedAs: '',
         };
     }
     selectFile = () => {
@@ -42,7 +43,6 @@ export default class StorageScreen extends React.Component {
               resourcePath: source,
             });
           }
-          this.predictPicture(this.state.resourcePath.uri)
         });
     }
 
@@ -59,7 +59,7 @@ export default class StorageScreen extends React.Component {
             // newData.append('image', this.state.selectedFile, this.state.selectedFile.name);
             axios.post("https://car-plate-detection.herokuapp.com/predict", data, {
                 onUploadProgress: progressEvent => {
-                    console.log("Upload progress: "+ Math.round(progressEvent.loaded/ progressEvent.total*100) );
+                    // console.log("Upload progress: "+ Math.round(progressEvent.loaded/ progressEvent.total*100) );
                 }
             }).then(responseData => {
                 // Log the response form the server
@@ -87,14 +87,13 @@ export default class StorageScreen extends React.Component {
         // Dismiss the acitivty indicator
         this.setState({
             identifedAs:identifiedImage,
-            loading:false
         });
         // Show an alert with the answer on
         Alert.alert(
-                this.state.identifedAs,
-                '',
-                { cancelable: false }
-            )
+          this.state.identifedAs,
+          '',
+          { cancelable: false }
+        )
     }
     render() {
         return (
@@ -108,18 +107,17 @@ export default class StorageScreen extends React.Component {
                 />
                 <Image
                     source={{ uri: this.state.resourcePath.uri }}
-                    style={{ width: 200, height: 200 }}
+                    style={{ width: Dimensions.get('window').width, height: Dimensions.get('window').width }}
                 />
                 {/* <Text style={{ alignItems: 'center' }}>
                     {this.state.resourcePath.uri}
                 </Text> */}
-        
                 <TouchableOpacity onPress={this.selectFile} style={styles.button}  >
                     <Text style={styles.buttonText}>Select File</Text>
                 </TouchableOpacity>       
-                <TouchableOpacity onPress={this.predictPicture} style={styles.button}  >
+                <TouchableOpacity onPress={()=>this.predictPicture(this.state.resourcePath.uri)} style={styles.button}  >
                     <Text style={styles.buttonText}>Send Image</Text>
-                </TouchableOpacity>    
+                </TouchableOpacity>  
                 </View>
             </View>
         );
@@ -141,7 +139,9 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: 4,
-      marginBottom:12    
+      marginBottom:12,   
+      padding: 10,
+      marginTop: 10
     },
     buttonText: {
       textAlign: 'center',
