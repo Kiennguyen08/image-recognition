@@ -3,7 +3,9 @@ import { Dimensions, StyleSheet, Text, View, TouchableOpacity, Button, Image, Al
 import * as ImagePicker from 'react-native-image-picker';
 import axios from 'axios' 
 
-export default class StorageScreen extends React.Component {
+
+
+class StorageScreen extends React.Component {
 
     constructor(props) {
         super(props);
@@ -115,7 +117,7 @@ export default class StorageScreen extends React.Component {
                 <TouchableOpacity onPress={this.selectFile} style={styles.button}  >
                     <Text style={styles.buttonText}>Select File</Text>
                 </TouchableOpacity>       
-                <TouchableOpacity onPress={()=>this.predictPicture(this.state.resourcePath.uri)} style={styles.button}  >
+                <TouchableOpacity onPress={()=>{this.predictPicture(this.state.resourcePath.uri); this.props.navigation.navigate("Result")}} style={styles.button}  >
                     <Text style={styles.buttonText}>Send Image</Text>
                 </TouchableOpacity>  
                 </View>
@@ -141,7 +143,7 @@ const styles = StyleSheet.create({
       borderRadius: 4,
       marginBottom:12,   
       padding: 10,
-      marginTop: 10
+      marginTop: 20
     },
     buttonText: {
       textAlign: 'center',
@@ -149,3 +151,5 @@ const styles = StyleSheet.create({
       color: '#fff'
     }
   });
+
+  export default StorageScreen;
