@@ -33,17 +33,25 @@ class Storage extends React.Component{
 class ResultScreen extends React.Component {
   render(){
     return (
-      <ResultComponent />
+      <ResultComponent route={this.props.route}/>
     );
   }
 }
+class CameraScreen extends React.Component {
+  render(){
+    return (
+      <Camera navigation={this.props.navigation}/>
+    );
+  }
+}
+
 const Stack = createStackNavigator();
 export default function App() {
   return(
       <NavigationContainer>
           <Stack.Navigator initialRouteName = "Home">
             <Stack.Screen name = "Home" component={HomeScreen} />
-            <Stack.Screen name = "Camera" component={Camera} />
+            <Stack.Screen name = "Camera" component={CameraScreen} />
             <Stack.Screen name = "StorageScreen" component={Storage} />
             <Stack.Screen name = "Result" component={ResultScreen} />
           </Stack.Navigator>

@@ -10,8 +10,10 @@ export default class Camera extends React.Component {
         this.state = { 
             identifedAs: '',
             loading: false,
-            selectedFile: null
-        }
+            selectedFile: null,
+            resourcePath: {},
+            result: null
+        };
     }
 
     //use for API CLARIFAI
@@ -91,7 +93,15 @@ export default class Camera extends React.Component {
                 //     let np = temp.data.number_plate;
                 //     this.displayAnswer(np);
                 // }
-                this.displayAnswer(JSON.stringify(temp.data));
+
+                // this.displayAnswer(JSON.stringify(temp.data));
+
+                let res = JSON.stringify(temp.data);
+                this.setState({
+                  result:res
+                });
+                this.displayAnswer(res);
+                this.props.navigation.navigate("Result",{image_path: this.state.resourcePath.uri, res_predict: this.state.result});
 
             },(err)=>{
                 console.log(err)

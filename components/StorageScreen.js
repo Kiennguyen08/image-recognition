@@ -12,6 +12,7 @@ class StorageScreen extends React.Component {
         this.state = {
         resourcePath: {},
         identifedAs: '',
+        result: null
         };
     }
     selectFile = () => {
@@ -72,10 +73,16 @@ class StorageScreen extends React.Component {
                 //     let np = temp.data.number_plate;
                 //     this.displayAnswer(np);
                 // }
-                this.displayAnswer(JSON.stringify(temp.data));
+                let res = JSON.stringify(temp.data);
+                this.setState({
+                  result:res
+                });
+                this.displayAnswer(res);
+                this.props.navigation.navigate("Result",{image_path: this.state.resourcePath.uri, res_predict: this.state.result});
             },(err)=>{
                 console.log(err)
             });
+           
           // Create the config object for the POST
           // You typically have an OAuth2 token that you use for authentication
           const config = {
@@ -91,12 +98,17 @@ class StorageScreen extends React.Component {
             identifedAs:identifiedImage,
         });
         // Show an alert with the answer on
-        Alert.alert(
-          this.state.identifedAs,
-          '',
-          { cancelable: false }
-        )
+        // Alert.alert(
+        //   this.state.identifedAs,
+        //   '',
+        //   { cancelable: false }
+        // )
     }
+    async doSomeStuff(){
+      await this.predictPicture(this.state.resourcePath.uri);
+      this.props.navigation.navigate("Result",{image_path: this.state.resourcePath.uri, res_predict: this.state.result})
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -117,9 +129,21 @@ class StorageScreen extends React.Component {
                 <TouchableOpacity onPress={this.selectFile} style={styles.button}  >
                     <Text style={styles.buttonText}>Select File</Text>
                 </TouchableOpacity>       
-                <TouchableOpacity onPress={()=>{this.predictPicture(this.state.resourcePath.uri); this.props.navigation.navigate("Result")}} style={styles.button}  >
+                {/* <TouchableOpacity onPress={()=>{this.predictPicture(this.state.resourcePath.uri); 
+                                                setTimeout(() => {
+                                                  this.props.navigation.navigate("Result",{image_path: this.state.resourcePath.uri, res_predict: this.state.result})
+                                                }, 5000); }}
+                                                style={styles.button}>
+                                                  
+                    <Text style={styles.buttonText}>Send Image</Text>
+                </TouchableOpacity>   */}
+
+                <TouchableOpacity onPress={()=>{this.predictPicture(this.state.resourcePath.uri)}}
+                                                style={styles.button}>
+                                                  
                     <Text style={styles.buttonText}>Send Image</Text>
                 </TouchableOpacity>  
+
                 </View>
             </View>
         );
