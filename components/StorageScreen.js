@@ -60,7 +60,8 @@ class StorageScreen extends React.Component {
             });
             // const newData = new FormData();
             // newData.append('image', this.state.selectedFile, this.state.selectedFile.name);
-            axios.post("https://car-plate-detection.herokuapp.com/predict", data, {
+            //old add: https://car-plate-detection.herokuapp.com
+            axios.post("https://weatherforcast.ml/predict", data, {
                 onUploadProgress: progressEvent => {
                     // console.log("Upload progress: "+ Math.round(progressEvent.loaded/ progressEvent.total*100) );
                 }
@@ -126,24 +127,25 @@ class StorageScreen extends React.Component {
                 {/* <Text style={{ alignItems: 'center' }}>
                     {this.state.resourcePath.uri}
                 </Text> */}
-                <TouchableOpacity onPress={this.selectFile} style={styles.button}  >
-                    <Text style={styles.buttonText}>Select File</Text>
-                </TouchableOpacity>       
-                {/* <TouchableOpacity onPress={()=>{this.predictPicture(this.state.resourcePath.uri); 
-                                                setTimeout(() => {
-                                                  this.props.navigation.navigate("Result",{image_path: this.state.resourcePath.uri, res_predict: this.state.result})
-                                                }, 5000); }}
-                                                style={styles.button}>
-                                                  
-                    <Text style={styles.buttonText}>Send Image</Text>
-                </TouchableOpacity>   */}
+                <View style={styles.buttonContainerRow}>
+                  <TouchableOpacity onPress={this.selectFile} style={styles.button}  >
+                      <Text style={styles.buttonText}>Select File</Text>
+                  </TouchableOpacity>       
+                  {/* <TouchableOpacity onPress={()=>{this.predictPicture(this.state.resourcePath.uri); 
+                                                  setTimeout(() => {
+                                                    this.props.navigation.navigate("Result",{image_path: this.state.resourcePath.uri, res_predict: this.state.result})
+                                                  }, 5000); }}
+                                                  style={styles.button}>
+                                                    
+                      <Text style={styles.buttonText}>Send Image</Text>
+                  </TouchableOpacity>   */}
 
-                <TouchableOpacity onPress={()=>{this.predictPicture(this.state.resourcePath.uri)}}
-                                                style={styles.button}>
-                                                  
-                    <Text style={styles.buttonText}>Send Image</Text>
-                </TouchableOpacity>  
-
+                  <TouchableOpacity onPress={()=>{this.predictPicture(this.state.resourcePath.uri)}}
+                                                  style={styles.button}>
+                                                    
+                      <Text style={styles.buttonText}>Send Image</Text>
+                  </TouchableOpacity>  
+                </View>
                 </View>
             </View>
         );
@@ -161,18 +163,22 @@ const styles = StyleSheet.create({
     button: {
       width: 250,
       height: 60,
-      backgroundColor: '#3740ff',
+      backgroundColor: 'rgba(39,33,157,1)',
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: 4,
-      marginBottom:12,   
+      marginBottom:8,   
       padding: 10,
-      marginTop: 20
+      marginTop: 15
     },
     buttonText: {
       textAlign: 'center',
       fontSize: 15,
       color: '#fff'
+    },
+    buttonContainerRow: {
+      flexDirection: "column",
+      marginTop: 30
     }
   });
 

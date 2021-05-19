@@ -80,7 +80,7 @@ export default class Camera extends React.Component {
 
             const newData = new FormData();
             newData.append('image', this.state.selectedFile, this.state.selectedFile.name);
-            axios.post("https://car-plate-detection.herokuapp.com/predict", newData, {
+            axios.post("https://weatherforcast.ml/predict", newData, {
                 onUploadProgress: progressEvent => {
                     console.log("Upload progress: "+ Math.round(progressEvent.loaded/ progressEvent.total*100) );
                 }

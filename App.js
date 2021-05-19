@@ -4,23 +4,26 @@ import React from 'react';
 import Camera from './components/Camera.js';
 import StorageScreen from "./components/StorageScreen";
 import ResultComponent from "./components/ResultComponent";
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from "@react-navigation/stack";
+// import {Shapes} from "react-native-background-shapes";
 
 function HomeScreen({navigation}) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        {/* <Text>Home Screen</Text> */}
-        <Button
-            title="Go to Camera"
-            onPress={() => navigation.navigate('Camera')}
-        />
-        <Button
-            title="Choose image from Storage"
-            onPress={() => navigation.navigate('StorageScreen')}
-        />
-      </View>
+        <View style={styles.container}>
+          {/* <Shape/> */}
+          <Button
+              style={styles.button_style}
+              title="Go to Camera"
+              onPress={() => navigation.navigate('Camera')}
+          />
+          <Button
+              style={styles.button_style}
+              title="Choose image from Storage"
+              onPress={() => navigation.navigate('StorageScreen')}
+          />
+        </View>        
     );
 }
 class Storage extends React.Component{
@@ -45,6 +48,23 @@ class CameraScreen extends React.Component {
   }
 }
 
+const styles = StyleSheet.create({
+  container: { 
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center' 
+  },
+  button_style : {
+    height: 40,
+    width: 188,
+    backgroundColor: "rgba(39,33,157,1)",
+    borderWidth: 1,
+    borderColor: "#000000",
+    borderRadius: 5
+  },
+});
+
+
 const Stack = createStackNavigator();
 export default function App() {
   return(
@@ -58,3 +78,4 @@ export default function App() {
       </NavigationContainer>
   );
 }
+

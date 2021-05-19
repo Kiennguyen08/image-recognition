@@ -1,31 +1,32 @@
 import React from 'react';
 import {  Dimensions, StyleSheet, Text, View, TouchableOpacity, Button, Image, Alert } from 'react-native';
+import { color } from 'react-native-reanimated';
 
 class StorageScreen extends React.Component {
-    renderImage = (img_path, topPosition, bottomPosition, leftPosition, rightPosition) => {
-      return (
-        <View style={styles.imageContainer}>
-          <Image
-            source={{
-              uri: img_path
-            }}
-            style={styles.image}
-            // resizeMode="stretch"
-          />
-          <View
-            style={[
-              styles.rectangle,
-              {
-                top: topPosition,
-                bottom: bottomPosition,
-                left: leftPosition,
-                right: rightPosition
-              }
-            ]}
-          />
-        </View>
-      );
-    };
+    // renderImage = (img_path, topPosition, bottomPosition, leftPosition, rightPosition) => {
+    //   return (
+    //     <View style={styles.imageContainer}>
+    //       <Image
+    //         source={{
+    //           uri: img_path
+    //         }}
+    //         style={styles.image}
+    //         // resizeMode="stretch"
+    //       />
+    //       <View
+    //         style={[
+    //           styles.rectangle,
+    //           {
+    //             top: topPosition,
+    //             bottom: bottomPosition,
+    //             left: leftPosition,
+    //             right: rightPosition
+    //           }
+    //         ]}
+    //       />
+    //     </View>
+    //   );
+    // };
 
     render(){
     const { image_path, res_predict } = this.props.route.params;
@@ -43,9 +44,11 @@ class StorageScreen extends React.Component {
             source={{ uri: `data:image/jpeg;base64,${base64Image}`}}
             style={{ width: Dimensions.get('window').width, height: Dimensions.get('window').width }}
           />
-          <Text style={[styles.title]}>Car Number: {res.number_plate}</Text>
-          <Text style={[styles.title]}>Type: {res.vehicle_type}</Text>
-          <Text style={[styles.title]}>Time: {res.time_execution}</Text>
+          <View style={styles.container_text}>
+            <Text style={[styles.title]}>Car Number: {res.number_plate}</Text>
+            <Text style={[styles.title]}>Type: {res.vehicle_type}</Text>
+            <Text style={[styles.title]}>Time: {res.time_execution}</Text>
+          </View>
         </View>
       );
     }
@@ -76,5 +79,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',  
     
   },   
+  container_text: {
+    marginTop: 30,
+    flexDirection: "column",
+  }
 });
 export default StorageScreen;
